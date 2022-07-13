@@ -1,26 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { lazy, Suspense, FC } from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { IssuesContextProvider, DashboardContextProvider } from "context";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const DashboardTable = lazy(() => import("components/DashboardTable"));
+const SearchInput = lazy(() => import("components/SearchInput"));
+
+const App: FC = () => (
+  <IssuesContextProvider>
+    <DashboardContextProvider>
+      <div className="App">
+        <Suspense fallback={<div>Loading...</div>}>
+          <SearchInput />
+        </Suspense>
+        <Suspense fallback={<div>Loading...</div>}>
+          <DndProvider backend={HTML5Backend}>
+            <DashboardTable />
+          </DndProvider>
+        </Suspense>
+      </div>
+    </DashboardContextProvider>
+  </IssuesContextProvider>
+);
 
 export default App;
